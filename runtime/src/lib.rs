@@ -33,6 +33,7 @@ pub use frame_support::{
 	},
 	StorageValue,
 };
+use frame_support::pallet_prelude::ConstU32;
 pub use pallet_balances::Call as BalancesCall;
 pub use pallet_timestamp::Call as TimestampCall;
 use pallet_transaction_payment::CurrencyAdapter;
@@ -284,6 +285,23 @@ impl pallet_poe::Config for Runtime {
 	type Event = Event;
 }
 
+parameter_types! {
+	// One can owned at most 9,999 Kitties
+	pub const MaxKittyOwned: u32 = 9999;
+	pub const MinKittyMintingPrice: u32 = 3;
+}
+
+/// Configure the pallet-kitties in pallets/kitties.
+impl pallet_kitties::Config for Runtime {
+	type Event = Event;
+	type Currency = Balances;
+	type KittyRandomness = RandomnessCollectiveFlip;
+	type MaxKittyOwned = MaxKittyOwned;
+	type MinKittyMintingPrice = MinKittyMintingPrice;
+	type KittyIndex = sp_core::H256;
+	type KittyHashing = BlakeTwo256;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -303,6 +321,8 @@ construct_runtime!(
 		TemplateModule: pallet_template,
 		// Added from Proof of Existence Tutorial
 		PoeModule: pallet_poe,
+		// Added from Substrate Kitties Chain Tutorial
+		SubstrateKitties: pallet_kitties,
 	}
 );
 
