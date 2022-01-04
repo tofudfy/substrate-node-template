@@ -75,8 +75,8 @@ impl pallet_balances::Config for Test {
 }
 
 parameter_types! {
-	// One can owned at most 9,999 Kitties
-	pub const MaxKittyOwned: u32 = 9999;
+	// One can owned at most 5 Kitties
+	pub const MaxKittyOwned: u32 = 5;
 	// The reserve price of mining a kitty is 3
 	pub const MinKittyMintingPrice: u32 = 3;
 }
@@ -94,6 +94,36 @@ impl pallet_kitties::Config for Test {
 
 impl pallet_randomness_collective_flip::Config for Test {}
 
+pub(crate) fn new_test_ext() -> sp_io::TestExternalities {
+	let mut t = frame_system::GenesisConfig::default().build_storage::<Test>().unwrap();
+	GenesisConfig {
+		balances: BalancesConfig {
+			balances: vec![
+				(1,  100),
+				(2,  10),
+				(3,  2)
+			]
+		},
+		substrate_kitties: SubstrateKittiesConfig {
+			kitties: vec![
+				(1, *b"1234567890123456", Gender::Female),
+				(2, *b"123456789012345a", Gender::Male),
+				(3, *b"123456789012345e", Gender::Male),
+				(3, *b"1234567890123462", Gender::Male),
+				(3, *b"1234567890123466", Gender::Female),
+			]
+		},
+		..Default::default()
+	}
+		.assimilate_storage(&mut t)
+		.unwrap();
+
+	let mut ext = sp_io::TestExternalities::new(t);
+	ext.execute_with(|| System::set_block_number(1));
+	ext
+}
+
+/*
 pub(crate) fn new_test_ext() -> sp_io::TestExternalities {
 	let mut t = frame_system::GenesisConfig::default().build_storage::<Test>().unwrap();
 	pallet_balances::GenesisConfig::<Test> {
@@ -118,3 +148,4 @@ pub(crate) fn new_test_ext() -> sp_io::TestExternalities {
 	ext.execute_with(|| System::set_block_number(1));
 	ext
 }
+*/

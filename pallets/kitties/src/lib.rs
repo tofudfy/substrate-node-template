@@ -291,7 +291,7 @@ pub mod pallet {
 			Self::transfer_kitty_to(&kitty_id, &buyer)?;
 
 			// Deposit a "Bought" event.
-			Self::deposit_event(Event::Bought(buyer, seller, kitty_id, bid_price));
+			Self::deposit_event(Event::Bought(seller, buyer, kitty_id, bid_price));
 
 			Ok(())
 		}
@@ -315,10 +315,10 @@ pub mod pallet {
 
 			// checks the ownership of the kitty
 			let owner_kitty1 = parent1.owner;
-			ensure!(owner != owner_kitty1, <Error<T>>::NotKittyOwner);
+			ensure!(owner == owner_kitty1, <Error<T>>::NotKittyOwner);
 
 			let owner_kitty2 = parent2.owner;
-			ensure!(owner != owner_kitty2, <Error<T>>::NotKittyOwner);
+			ensure!(owner == owner_kitty2, <Error<T>>::NotKittyOwner);
 
 			// check the genders of the parents
 			let gender_kitty1 = parent1.gender;

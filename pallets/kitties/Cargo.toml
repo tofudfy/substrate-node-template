@@ -69,19 +69,19 @@ version = '4.0.0-dev'
 [dependencies.sp-std]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
-tag = 'monthly-2021-11-1'  # or the latest monthly
+tag = 'monthly-2021-12'  # or the latest monthly
 version = '4.0.0-dev'      # or the latest version
 
 [dependencies.pallet-balances]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
-tag = 'devhub/latest'
+tag = 'monthly-2021-12'
 version = '4.0.0-dev'
 
 [dependencies.pallet-randomness-collective-flip]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
-tag = 'devhub/latest'
+tag = 'monthly-2021-12'
 version = '4.0.0-dev'
 
 [features]
