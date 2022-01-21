@@ -26,7 +26,7 @@ fn create_claim_exceed_length_limit() {
         // Execute create claim and assert the ExceedProofLengthLimit error
         assert_noop!(
             PoeModule::create_claim(Origin::signed(1), proof_exceed.clone()),
-            Error::<Test>::ExceedProofLengthLimit
+            Error::<Test, Test>::ExceedProofLengthLimit
         );
 	});
 }
