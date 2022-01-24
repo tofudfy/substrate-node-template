@@ -64,7 +64,7 @@ pub mod pallet {
 	const LOCK_BLOCK_EXPIRATION: u32 = 3; // in block number
 
 	// the maximum accuracy of Permill::from_parts
-	const Permill_MAX: u64 = 1000000;
+	const PERMILL_MAX: u64 = 1000000;
 
 	/// Based on the above `KeyTypeId` we need to generate a pallet-specific crypto type wrapper.
 	/// We can utilize the supported crypto kinds (`sr25519`, `ed25519` and `ecdsa`) and augment
@@ -195,7 +195,7 @@ pub mod pallet {
 	}
 
 	fn cut_u64_to_u32_permill(mut num: u64) -> u32 {
-		while num > Permill_MAX {
+		while num > PERMILL_MAX {
 			num /= 10;
 		}
 		return num as u32
@@ -458,13 +458,17 @@ pub mod pallet {
 		/// fetch the price from a local storage or a remote url
 		fn fetch_price_info() -> Result<PriceInfo, Error<T>> {
 
+			// Note: 建立持久化存储的意义在于部分数据更新频次低，但链上访问频繁
+			// 因此通过本地持久化存储的方式，减少远程通信开销，同时提高访问速度
+			// 然而在价格预言机的场景中，价格频繁更新，因此不适用持久化存储
+			/*
 			// fetch price from local storage, if success return the value
 			let s_info = StorageValueRef::persistent(b"offchain-demo::price-info");
 
 			if let Ok(Some(price_info)) = s_info.get::<PriceInfo>() {
 				log::info!("cached price-info: {:?}", price_info);
 				return Ok(price_info);
-			}
+			}*/
 
 			// if not, try to lock the storage and fetch the price remotely
 			let mut lock = StorageLock::<BlockAndTime<Self>>::with_block_and_time_deadline(
