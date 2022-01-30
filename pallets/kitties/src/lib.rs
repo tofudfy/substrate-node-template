@@ -7,11 +7,14 @@ mod mock;
 #[cfg(test)]
 mod tests;
 
+mod benchmarking;
+// pub mod weights;
+
 #[frame_support::pallet]
 pub mod pallet {
 	use frame_support::{
 		sp_runtime::traits::Hash,
-		dispatch::DispatchResult, // DispatchResultWithPostInfo
+		dispatch::{DispatchResult, DispatchResultWithPostInfo},
 		traits::{Currency, ReservableCurrency, ExistenceRequirement, Randomness},
 		pallet_prelude::*,
 	};
@@ -23,6 +26,8 @@ pub mod pallet {
 		sp_io::hashing::blake2_128,
 		transactional
 	};
+
+	// use crate::weights::WeightInfo;
 
 	#[cfg(feature = "std")]
 	use frame_support::serde::{Deserialize, Serialize};
@@ -72,6 +77,9 @@ pub mod pallet {
 		// type KittyHashing = Self::Hashing;
 		type KittyIndex: Parameter + Member + MaybeSerializeDeserialize + Copy;
 		type KittyHashing: Hash<Output = Self::KittyIndex> + TypeInfo;
+
+		/// Information on runtime weights
+		// type WeightInfo: WeightInfo;
 
 		// Add MaxKittyOwned constant
 		#[pallet::constant]
@@ -180,9 +188,10 @@ pub mod pallet {
 
 		// create_kitty: create a kitty and update the Storage
 		#[pallet::weight(1_000)]
+		// #[pallet::weight(T:WeightInfo::create_kitty(*something))]
 		pub fn create_kitty(
 			origin: OriginFor<T>
-		) -> DispatchResult {
+		) -> DispatchResult { // DispatchResultWithPostInfo
 			// checks the origin is signed
 			let sender = ensure_signed(origin)?;
 

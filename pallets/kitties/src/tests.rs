@@ -118,7 +118,7 @@ fn set_price_test() {
 		let kitties_owned_by_1 = SubstrateKitties::kitties_owned(1);
 		assert_ok!(SubstrateKitties::set_price(Origin::signed(1), kitties_owned_by_1[0], Some(bid_price)));
 
-		// query the metadate of the kitty
+		// query the metadata of the kitty
 		let kitty = SubstrateKitties::kitties(kitties_owned_by_1[0])
 			.expect("Could have this kitty ID owned by acct 1");
 		assert_eq!(kitty.price, Some(bid_price));
