@@ -6,9 +6,9 @@ pub use pallet::*;
 mod mock;
 #[cfg(test)]
 mod tests;
-
+#[cfg(feature = "runtime-benchmarks")]
 mod benchmarking;
-// pub mod weights;
+pub mod weights;
 
 #[frame_support::pallet]
 pub mod pallet {
@@ -27,7 +27,7 @@ pub mod pallet {
 		transactional
 	};
 
-	// use crate::weights::WeightInfo;
+	use crate::weights::WeightInfo;
 
 	#[cfg(feature = "std")]
 	use frame_support::serde::{Deserialize, Serialize};
@@ -79,7 +79,7 @@ pub mod pallet {
 		type KittyHashing: Hash<Output = Self::KittyIndex> + TypeInfo;
 
 		/// Information on runtime weights
-		// type WeightInfo: WeightInfo;
+		type WeightInfo: WeightInfo;
 
 		// Add MaxKittyOwned constant
 		#[pallet::constant]
@@ -187,11 +187,11 @@ pub mod pallet {
 	impl<T: Config> Pallet<T> {
 
 		// create_kitty: create a kitty and update the Storage
-		#[pallet::weight(1_000)]
-		// #[pallet::weight(T:WeightInfo::create_kitty(*something))]
+		// #[pallet::weight(1_000)]
+		#[pallet::weight(T::WeightInfo::create_kitty())]
 		pub fn create_kitty(
 			origin: OriginFor<T>
-		) -> DispatchResult { // DispatchResultWithPostInfo
+		) -> DispatchResultWithPostInfo {
 			// checks the origin is signed
 			let sender = ensure_signed(origin)?;
 
@@ -206,7 +206,7 @@ pub mod pallet {
 			log::info!("A kitty is born with ID: {:?}.", kitty_id);
 			Self::deposit_event(Event::Created(sender, kitty_id));
 
-			Ok(())
+			Ok(().into())
 		}
 
 		// set_price: set the price of the kitty by its owner

@@ -338,6 +338,7 @@ impl pallet_kitties::Config for Runtime {
 	type MinKittyMintingPrice = MinKittyMintingPrice;
 	type KittyIndex = sp_core::H256;
 	type KittyHashing = BlakeTwo256;
+	type WeightInfo = pallet_kitties::weights::SubstrateWeight<Runtime>;
 }
 
 /// Configure the pallet-ocw in pallets/ocw
